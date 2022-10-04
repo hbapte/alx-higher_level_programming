@@ -1,53 +1,45 @@
 #!/usr/bin/python3
-"""square
-"""
+"""The Square Class"""
+
+
 from models.rectangle import Rectangle
 
 
 class Square(Rectangle):
-    """Inherits from Rectangle
-    """
-
+    """Square class which inherits from the rectangle class"""
     def __init__(self, size, x=0, y=0, id=None):
-        super().__init__(width=size, height=size, x=x, y=y, id=id)
+        """initialization"""
+        super().__init__(size, size, x, y, id)
 
     @property
     def size(self):
+        """returns the size property which
+        is the same as the width and height
+        """
         return self.width
 
     @size.setter
     def size(self, value):
-        """size needs to be an int
-        """
-
-        self.width = value
-        self.height = value
+        """sets the size property"""
+        self.width = self.height = value
 
     def __str__(self):
-        """Returns formatted information display
-        """
-
-        return "[{}] ({}) {}/{} - {}".format(self.__class__.__name__,
-                                             self.id, self.x, self.y,
-                                             self.width)
+        """Public str method"""
+        return "[Square] ({:d}) {:d}/{:d} - {:d}"\
+            .format(self.id, self.x, self.y, self.width)
 
     def update(self, *args, **kwargs):
-        if len(kwargs) != 0:
-            for k, v in kwargs.items():
-                setattr(self, k, v)
-        elif len(args) != 0:
-            try:
-                self.id = args[0]
-                self.size = args[1]
-                self.x = args[2]
-                self.y = args[3]
-            except IndexError:
-                pass
-        else:
-            print()
-
-    def to_dictionary(self):
-        """Returns a dict representation
+        """update square attributes
         """
 
-        return {'id': self.id, 'x': self.x, 'size': self.width, 'y': self.y}
+        expectedArgs = (self.id, self.size, self.x, self.y)
+        if args != ():
+            self.id, self.size, self.x, self.y = \
+                args + expectedArgs[len(args):len(expectedArgs)]
+        elif kwargs:
+            for (name, value) in kwargs.items():
+                setattr(self, name, value)
+
+    def to_dictionary(self):
+        """Returns a dictionary representation of a rectangle"""
+        return {"id": self.id, "size": self.size, "x": self.x, "y": self.y}
